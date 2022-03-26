@@ -54,7 +54,7 @@ unsafeHint _ (ModuleEx (L _ m)) = \ld@(L loc d) ->
      -- 'x' does not declare a new function.
      | d@(ValD _
            FunBind {fun_id=L _ (Unqual x)
-                      , fun_matches=MG{mg_origin=FromSource,mg_alts=L _ [L _ Match {m_pats=[]}]}}) <- [d]
+                      , fun_matches=MG{mg_ext=FromSource,mg_alts=L _ [L _ Match {m_pats=[]}]}}) <- [d]
      -- 'x' is a synonym for an appliciation involing 'unsafePerformIO'
      , isUnsafeDecl d
      -- 'x' is not marked 'NOINLINE'.
@@ -63,14 +63,14 @@ unsafeHint _ (ModuleEx (L _ m)) = \ld@(L loc d) ->
     gen :: OccName -> LHsDecl GhcPs
     gen x = noLocA $
       SigD noExtField (InlineSig EpAnnNotUsed (noLocA (mkRdrUnqual x))
-                      (InlinePragma (SourceText "{-# NOINLINE") NoInline Nothing NeverActive FunLike))
+                      (InlinePragma (SourceText "{-# NOINLINE") (NoInline (SourceText "{-# NOINLINE")) Nothing NeverActive FunLike))
     noinline :: [OccName]
     noinline = [q | L _(SigD _ (InlineSig _ (L _ (Unqual q))
-                                                (InlinePragma _ NoInline Nothing NeverActive FunLike))
+                                                (InlinePragma _ (NoInline (SourceText "{-# NOINLINE")) Nothing NeverActive FunLike))
         ) <- hsmodDecls m]
 
 isUnsafeDecl :: HsDecl GhcPs -> Bool
-isUnsafeDecl (ValD _ FunBind {fun_matches=MG {mg_origin=FromSource,mg_alts=L _ alts}}) =
+isUnsafeDecl (ValD _ FunBind {fun_matches=MG {mg_ext=FromSource,mg_alts=L _ alts}}) =
   any isUnsafeApp (childrenBi alts) || any isUnsafeDecl (childrenBi alts)
 isUnsafeDecl _ = False
 
