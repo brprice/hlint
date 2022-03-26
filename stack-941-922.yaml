@@ -1,0 +1,18 @@
+resolver: nightly-2022-05-27 # ghc-9.2.2
+extra-deps:
+  - archive: /Users/shayne/project/sf-ghc-lib/ghc-lib-parser-9.4.1.20220527.tar.gz
+    sha256: "f86b74d11229435470d5e17cebe062072e0ba904196ef7341d2713a6395d5743"
+  - archive: /Users/shayne/project/ghc-lib-parser-ex/ghc-lib-parser-ex-9.4.1.20220527.tar.gz
+    sha256: "3edc1f207cc35d0b086e2f2f9d1ec1a8c66c1b14ec2d8d6478cae00b4e859014"
+ghc-options: {"$locals": -ddump-to-file -ddump-hi -Werror=unused-imports -Werror=unused-local-binds -Werror=unused-top-binds -Werror=orphans}
+flags:
+  hlint:
+     ghc-lib: true
+  ghc-lib-parser-ex:
+    auto: false
+    no-ghc-lib: false
+packages:
+  - .
+# Allow out-of-bounds ghc-lib-parser-ex (while testing with builds
+# like ghc-lib-parser-ex-9.4.1.20220527.tar.gz)
+allow-newer: true

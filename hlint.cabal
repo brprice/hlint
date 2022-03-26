@@ -80,16 +80,16 @@ library
         aeson >= 1.1.2.0,
         filepattern >= 0.1.1
 
-    if !flag(ghc-lib) && impl(ghc >= 9.2.2) && impl(ghc < 9.3.0)
+    if !flag(ghc-lib) && impl(ghc >= 9.4.1) && impl(ghc < 9.5.0)
       build-depends:
-        ghc == 9.2.*,
+        ghc == 9.4.*,
         ghc-boot-th,
         ghc-boot
     else
       build-depends:
-          ghc-lib-parser == 9.2.*
+          ghc-lib-parser == 9.4.*
     build-depends:
-        ghc-lib-parser-ex >= 9.2.0.3 && < 9.2.1
+        ghc-lib-parser-ex >= 9.4.0.0 && < 9.4.1
 
     if flag(gpl)
         build-depends: hscolour >= 1.21
